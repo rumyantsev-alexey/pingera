@@ -21,7 +21,7 @@ public class Task {
     @Getter
     @Setter
     @NonNull
-    @ManyToOne(cascade = {CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private User user;
 
     @Getter
