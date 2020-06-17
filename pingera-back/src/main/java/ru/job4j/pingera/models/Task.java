@@ -9,19 +9,19 @@ import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "archive"
+@Table(name = "tasks"
 )
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
-    private int id;
+    private long id;
 
     @Getter
     @Setter
     @NonNull
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private User user;
 
     @Getter

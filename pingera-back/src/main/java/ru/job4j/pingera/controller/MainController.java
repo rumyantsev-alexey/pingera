@@ -51,7 +51,13 @@ public class MainController {
             nnn.setName("Admin");
             Task ntask = newtask.convertToTask(nnn);
             t.save(ntask);
-            System.out.println(ntask);
+        }
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public void deleteTaskByTaskId(@PathVariable long id) {
+        if (t.findById(id).isPresent()) {
+            t.deleteById(id);
         }
     }
 }

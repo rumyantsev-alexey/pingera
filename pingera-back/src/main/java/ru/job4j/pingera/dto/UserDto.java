@@ -29,9 +29,10 @@ public class UserDto {
         User result = uuu.findByName(this.getName());
         if (result == null) {
             result = new User();
-            result.setName("Anonymus");
-            result.setPassword(p.encode(""));
+            result.setName("anonymus");
+            result.setPassword(p.encode("1"));
             result.setEmail("empty@empty.ru");
+            result.setId(3);
             uuu.save(result);
         }
         return result;
