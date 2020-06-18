@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.pingera.clasez.Ping;
 import ru.job4j.pingera.clasez.PingType;
 import ru.job4j.pingera.clasez.PingTypeImplIcmp4j;
+import ru.job4j.pingera.dto.UserDto;
 import ru.job4j.pingera.models.User;
 import ru.job4j.pingera.repositories.UsersRepository;
 
@@ -14,6 +15,7 @@ import java.security.Principal;
 import java.util.Base64;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class RestC {
 
     @Autowired
@@ -37,13 +39,13 @@ public class RestC {
         return  res;
     }
 
-    @RequestMapping("/login")
-    public boolean login(@RequestBody User user) {
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserDto user) {
         User usertemp = usdb.findByName(user.getName());
         return usertemp != null;
     }
 
-    @RequestMapping("/user")
+    @PostMapping("/user")
     public Principal user(HttpServletRequest request) {
         String authToken = request.getHeader("Authorization")
                 .substring("Basic".length()).trim();

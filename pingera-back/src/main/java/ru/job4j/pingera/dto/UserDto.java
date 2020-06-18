@@ -22,6 +22,7 @@ public class UserDto {
     private PasswordEncoder p;
 
     private String name;
+    private  String password;
 
 
     public User convert() {
