@@ -15,7 +15,7 @@ import java.security.Principal;
 import java.util.Base64;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class RestC {
 
     @Autowired
@@ -48,7 +48,7 @@ public class RestC {
     @PostMapping("/user")
     public Principal user(HttpServletRequest request) {
         String authToken = request.getHeader("Authorization")
-                .substring("Basic".length()).trim();
+                .substring(5).trim();
         return () ->  new String(Base64.getDecoder()
                 .decode(authToken)).split(":")[0];
     }

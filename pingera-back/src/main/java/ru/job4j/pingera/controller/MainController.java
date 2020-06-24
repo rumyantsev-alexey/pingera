@@ -12,7 +12,7 @@ package ru.job4j.pingera.controller;
         import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 
 public class MainController {
 
