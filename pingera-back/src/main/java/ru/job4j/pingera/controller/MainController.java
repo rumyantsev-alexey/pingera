@@ -12,7 +12,7 @@ package ru.job4j.pingera.controller;
         import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 
 public class MainController {
 
@@ -21,30 +21,32 @@ public class MainController {
     @Autowired
     private UserDto udto;
 
-    @GetMapping(value = "/getall")
+    @GetMapping(value = "/getalltasks")
     public List<Task> GetAllTask() {
         List<Task> result = new ArrayList<>();
         t.findAll().forEach(x -> result.add(x));
         return result;
     }
 
-    @GetMapping(value = "/get/{id}")
+    @GetMapping(value = "/getalltasks/{id}")
     public List<Task> GetAllTaskByUserId(@PathVariable int id) {
         List<Task> res = this.GetAllTask().stream().filter((x) -> x.getUser().getId() == id).collect(Collectors.toList());
         return res;
     }
-
-    @PostMapping(value = "/post/{id}")
-    public String PostTask(@PathVariable int id, @ModelAttribute Task newtask) {
-        String res ="";
-        if (newtask.getUser().getId() == id) {
-            t.save(newtask);
-            res = "Ok";
-        }
+    @GetMapping(value = "/gettask/{id}")
+    public Task GetAllTaskByTaskId(@PathVariable long id) {
+        Task res = t.findById(id).orElse(new Task());
         return res;
     }
 
-    @PostMapping(value = "/post")
+    @PostMapping(value = "/posttask/{id}")
+    public void PostTask(@PathVariable int id, @ModelAttribute Task newtask) {
+        if (newtask.getUser().getId() == id) {
+            t.save(newtask);
+        }
+    }
+
+    @PostMapping(value = "/posttask")
     public void PostTask(@RequestBody TaskDto newtask) {
         if (newtask.getName1() != null) {
             UserDto nnn = udto;
@@ -54,7 +56,7 @@ public class MainController {
         }
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/deletetask/{id}")
     public void deleteTaskByTaskId(@PathVariable long id) {
         if (t.findById(id).isPresent()) {
             t.deleteById(id);

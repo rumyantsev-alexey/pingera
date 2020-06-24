@@ -15,7 +15,7 @@ import java.security.Principal;
 import java.util.Base64;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class RestC {
 
     @Autowired
