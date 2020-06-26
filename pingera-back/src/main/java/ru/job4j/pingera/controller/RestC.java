@@ -2,6 +2,7 @@ package ru.job4j.pingera.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.pingera.clasez.Ping;
 import ru.job4j.pingera.clasez.PingType;
@@ -41,7 +42,7 @@ public class RestC {
 
     @PostMapping("/login")
     public boolean login(@RequestBody UserDto user) {
-        User usertemp = usdb.findByName(user.getName());
+        User usertemp = usdb.findByPasswordAndName(user.getPassword(), user.getName());
         return usertemp != null;
     }
 

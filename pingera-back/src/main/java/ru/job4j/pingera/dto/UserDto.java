@@ -18,9 +18,6 @@ public class UserDto {
     @Autowired
     private UsersRepository uuu;
 
-    @Autowired
-    private PasswordEncoder p;
-
     private String name;
     private  String password;
 
@@ -31,7 +28,7 @@ public class UserDto {
         if (result == null) {
             result = new User();
             result.setName("anonymus");
-            result.setPassword(p.encode("1"));
+            result.setPassword("1");
             result.setEmail("empty@empty.ru");
             result.setId(3);
             uuu.save(result);
