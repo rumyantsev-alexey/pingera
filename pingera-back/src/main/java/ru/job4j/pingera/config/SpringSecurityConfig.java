@@ -39,7 +39,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/getalltasks").permitAll()
         .antMatchers("/posttask").permitAll()
         .anyRequest()
-        .authenticated()
+        .permitAll()
         .and()
         .httpBasic()
         .and()

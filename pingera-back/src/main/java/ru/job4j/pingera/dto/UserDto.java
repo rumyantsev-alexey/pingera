@@ -18,6 +18,7 @@ public class UserDto {
     @Autowired
     private UsersRepository uuu;
 
+    private int id;
     private String name;
     private  String password;
 
