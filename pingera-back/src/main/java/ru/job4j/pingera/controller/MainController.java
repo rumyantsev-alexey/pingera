@@ -5,9 +5,13 @@ package ru.job4j.pingera.controller;
         import ru.job4j.pingera.dto.TaskDto;
         import ru.job4j.pingera.dto.UserDto;
         import ru.job4j.pingera.models.Task;
+        import ru.job4j.pingera.models.User;
         import ru.job4j.pingera.repositories.TasksRepository;
+        import ru.job4j.pingera.repositories.UsersRepository;
 
+        import java.security.Principal;
         import java.util.ArrayList;
+        import java.util.LinkedList;
         import java.util.List;
         import java.util.stream.Collectors;
 
@@ -20,17 +24,24 @@ public class MainController {
     private TasksRepository t;
     @Autowired
     private UserDto udto;
+    @Autowired
+    private UsersRepository u;
 
-    @GetMapping(value = "/getalltasks")
-    public List<Task> GetAllTask() {
+    @GetMapping(value = "/getalltasksforauthuser")
+    public List<Task> GetAllTask(Principal principal) {
         List<Task> result = new ArrayList<>();
-        t.findAll().forEach(x -> result.add(x));
-        return result;
+        User user = u.findByName(principal.getName());
+        t.findAll().forEach(x -> {
+            if (x.getUser().getId() == user.getId()) {
+                result.add(x);
+            }
+        });
+         return result;
     }
 
     @GetMapping(value = "/getalltasks/{id}")
     public List<Task> GetAllTaskByUserId(@PathVariable int id) {
-        List<Task> res = this.GetAllTask().stream().filter((x) -> x.getUser().getId() == id).collect(Collectors.toList());
+        List<Task> res = new LinkedList<>();
         return res;
     }
     @GetMapping(value = "/gettask/{id}")
@@ -47,10 +58,10 @@ public class MainController {
     }
 
     @PostMapping(value = "/posttask")
-    public void PostTask(@RequestBody TaskDto newtask) {
+    public void PostTask(@RequestBody TaskDto newtask, Principal principal) {
         if (newtask.getName1() != null) {
             UserDto nnn = udto;
-            nnn.setName("Admin");
+            nnn.setName(principal.getName());
             Task ntask = newtask.convertToTask(nnn);
             t.save(ntask);
         }

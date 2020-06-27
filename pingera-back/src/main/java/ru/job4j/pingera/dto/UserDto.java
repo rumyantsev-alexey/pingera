@@ -18,7 +18,6 @@ public class UserDto {
     @Autowired
     private UsersRepository uuu;
 
-    private int id;
     private String name;
     private  String password;
 
@@ -26,14 +25,6 @@ public class UserDto {
     public User convert() {
 
         User result = uuu.findByName(this.getName());
-        if (result == null) {
-            result = new User();
-            result.setName("anonymus");
-            result.setPassword("1");
-            result.setEmail("empty@empty.ru");
-            result.setId(3);
-            uuu.save(result);
-        }
         return result;
     }
 }
