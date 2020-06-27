@@ -33,11 +33,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
-        .antMatchers("/login").permitAll()
-        .antMatchers("/user").permitAll()
-        .antMatchers("/gettask").permitAll()
-        .antMatchers("/getalltasks").permitAll()
-        .antMatchers("/posttask").permitAll()
         .anyRequest()
         .permitAll()
         .and()

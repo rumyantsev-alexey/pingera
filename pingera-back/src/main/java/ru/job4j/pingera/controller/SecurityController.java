@@ -9,9 +9,7 @@ import ru.job4j.pingera.dto.UserDto;
 import ru.job4j.pingera.models.User;
 import ru.job4j.pingera.repositories.UsersRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.Base64;
 
 @RestController
 @CrossOrigin("*")
@@ -25,17 +23,10 @@ public class SecurityController {
         return usertemp != null;
     }
 
-    @PostMapping("/user")
-    public Principal user(HttpServletRequest request) {
-        String authToken = request.getHeader("Authorization");
-        if (authToken.length() > 5) {
-            authToken = authToken.substring(5).trim();
-        } else {
-            authToken = "";
-        }
-        String at = authToken;
-        return authToken != ""? () ->  new String(Base64.getDecoder()
-                .decode(at)).split(":")[0] : null;
+    @PostMapping("/authuser")
+    public UserDto getfullAuthUser(@RequestBody UserDto user) {
+        User usertemp = usdb.findByPasswordAndName(user.getPassword(), user.getName());
+        user.setId(usertemp.getId());
+        return user;
     }
-
 }
