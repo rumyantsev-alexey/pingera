@@ -12,11 +12,11 @@ import java.util.List;
 public class PingTypeImplIcmp4j implements PingType{
     
     private List<IcmpPingResponse> res;
-    private String qqq = "Ok";
 
     public PingTypeImplIcmp4j(List<IcmpPingResponse> res) {
         this.res = res;
     }
+
 
     @SneakyThrows
     @Override
@@ -54,5 +54,11 @@ public class PingTypeImplIcmp4j implements PingType{
         result.append(String.format(footer, ip.getHostAddress(), size, size - lost, lost, (lost / size) * 100, min, max, sum / size));
         return result.toString();
     };
+
+    @Override
+    public boolean isCorrect() {
+        return res.get(0).getSuccessFlag();
+    }
+
 }
 

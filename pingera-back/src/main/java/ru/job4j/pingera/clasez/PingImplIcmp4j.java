@@ -11,6 +11,7 @@ import java.util.List;
 @Component
 public class PingImplIcmp4j implements Ping {
     private IcmpPingRequest ip = new IcmpPingRequest();
+    private int count = 2;
 
     @Override
     public void setIp(InetAddress host) {
@@ -20,6 +21,11 @@ public class PingImplIcmp4j implements Ping {
     @Override
     public void setIp(String host) {
         ip.setHost(host);
+    }
+
+    @Override
+    public void setCount(int cnt) {
+        this.count = cnt;
     }
 
     @Override
@@ -39,14 +45,14 @@ public class PingImplIcmp4j implements Ping {
 
     @Override
     public PingType ping() {
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, 2);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: count);
         return new PingTypeImplIcmp4j(res);
     }
 
     @Override
     public PingType ping(InetAddress ip4) {
         this.setIp(ip4);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, 2);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: count);
         return new PingTypeImplIcmp4j(res);
     }
 

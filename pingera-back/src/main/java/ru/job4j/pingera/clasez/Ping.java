@@ -6,6 +6,7 @@ public interface Ping {
 
     void setIp(InetAddress host);
     void setIp(String host);
+    void setCount(int cnt);
     void setPacketsize(int packetsize);
     void setTTL(int ttl);
     void setTimeOut(long timeout);

@@ -39,7 +39,7 @@ public class MainController {
          return result;
     }
 
-    @GetMapping(value = "/getalltasks/{id}")
+/*    @GetMapping(value = "/getalltasks/{id}")
     public List<Task> GetAllTaskByUserId(@PathVariable int id) {
         List<Task> res = new LinkedList<>();
         return res;
@@ -56,7 +56,7 @@ public class MainController {
             t.save(newtask);
         }
     }
-
+*/
     @PostMapping(value = "/posttask")
     public void PostTask(@RequestBody TaskDto newtask, Principal principal) {
         if (newtask.getName1() != null) {

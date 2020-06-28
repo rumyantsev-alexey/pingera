@@ -23,9 +23,9 @@ public class SecurityController {
         return usertemp != null;
     }
 
-    @PostMapping("/authuser")
+/*    @PostMapping("/authuser")
     public UserDto getfullAuthUser(@RequestBody UserDto user) {
         User usertemp = usdb.findByPasswordAndName(user.getPassword(), user.getName());
         return user;
-    }
+    }   */
 }
