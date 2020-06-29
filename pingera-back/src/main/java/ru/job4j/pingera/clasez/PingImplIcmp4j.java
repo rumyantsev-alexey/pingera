@@ -45,14 +45,14 @@ public class PingImplIcmp4j implements Ping {
 
     @Override
     public PingType ping() {
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: this.count);
         return new PingTypeImplIcmp4j(res);
     }
 
     @Override
     public PingType ping(InetAddress ip4) {
         this.setIp(ip4);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, this.count < 1? 2: this.count);
         return new PingTypeImplIcmp4j(res);
     }
 

@@ -10,13 +10,12 @@ import java.util.List;
 @Setter
 @Getter
 public class PingTypeImplIcmp4j implements PingType{
-    
+
     private List<IcmpPingResponse> res;
 
     public PingTypeImplIcmp4j(List<IcmpPingResponse> res) {
         this.res = res;
     }
-
 
     @SneakyThrows
     @Override
