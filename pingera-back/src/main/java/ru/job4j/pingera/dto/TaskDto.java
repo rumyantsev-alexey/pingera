@@ -25,6 +25,7 @@ public class TaskDto {
     private String sellist3;
     private String sellist4;
     private String text4;
+    private Integer total;
 
     public Task convertToTask(UserDto udto) {
         Task result = new Task();
@@ -43,6 +44,7 @@ public class TaskDto {
         result.setSellist3(this.getSellist3());
         result.setSellist4(this.getSellist4());
         result.setText4(this.getText4());
+        result.setTotal(this.getTotal());
 
         return result;
     }

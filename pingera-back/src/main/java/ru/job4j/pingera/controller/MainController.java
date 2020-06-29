@@ -39,27 +39,9 @@ public class MainController {
          return result;
     }
 
-/*    @GetMapping(value = "/getalltasks/{id}")
-    public List<Task> GetAllTaskByUserId(@PathVariable int id) {
-        List<Task> res = new LinkedList<>();
-        return res;
-    }
-    @GetMapping(value = "/gettask/{id}")
-    public Task GetAllTaskByTaskId(@PathVariable long id) {
-        Task res = t.findById(id).orElse(new Task());
-        return res;
-    }
-
-    @PostMapping(value = "/posttask/{id}")
-    public void PostTask(@PathVariable int id, @ModelAttribute Task newtask) {
-        if (newtask.getUser().getId() == id) {
-            t.save(newtask);
-        }
-    }
-*/
     @PostMapping(value = "/posttask")
     public void PostTask(@RequestBody TaskDto newtask, Principal principal) {
-        if (newtask.getName1() != null) {
+        if (newtask.getName1() != null && principal != null) {
             UserDto nnn = udto;
             nnn.setName(principal.getName());
             Task ntask = newtask.convertToTask(nnn);
@@ -72,5 +54,10 @@ public class MainController {
         if (t.findById(id).isPresent()) {
             t.deleteById(id);
         }
+    }
+
+    @PostMapping(value = "/adduser")
+    public void addUser(@RequestBody User newuser) {
+    u.save(newuser);
     }
 }

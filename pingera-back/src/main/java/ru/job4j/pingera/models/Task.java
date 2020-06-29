@@ -9,8 +9,7 @@ import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "tasks"
-)
+@Table(name = "tasks")
 public class Task {
 
     @Id
@@ -97,5 +96,11 @@ public class Task {
     @Setter
     @Column(name = "filter3")
     private String text4;
+
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "total")
+    private Integer total;
 
 }
