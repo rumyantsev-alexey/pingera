@@ -2,10 +2,12 @@ package ru.job4j.pingera.controller;
 
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.web.bind.annotation.*;
+        import ru.job4j.pingera.clasez.ConvertTaskToSubtasks;
         import ru.job4j.pingera.dto.TaskDto;
         import ru.job4j.pingera.dto.UserDto;
         import ru.job4j.pingera.models.Task;
         import ru.job4j.pingera.models.User;
+        import ru.job4j.pingera.repositories.SubTaskRepository;
         import ru.job4j.pingera.repositories.TasksRepository;
         import ru.job4j.pingera.repositories.UsersRepository;
 
@@ -26,6 +28,8 @@ public class MainController {
     private UserDto udto;
     @Autowired
     private UsersRepository u;
+    @Autowired
+    private SubTaskRepository st;
 
     @GetMapping(value = "/getalltasksforauthuser")
     public List<Task> GetAllTask(Principal principal) {
@@ -45,7 +49,9 @@ public class MainController {
             UserDto nnn = udto;
             nnn.setName(principal.getName());
             Task ntask = newtask.convertToTask(nnn);
-            t.save(ntask);
+
+            ntask = t.save(ntask);
+            st.saveAll(new ConvertTaskToSubtasks().convert(ntask));
         }
     }
 
@@ -60,4 +66,5 @@ public class MainController {
     public void addUser(@RequestBody User newuser) {
     u.save(newuser);
     }
+
 }

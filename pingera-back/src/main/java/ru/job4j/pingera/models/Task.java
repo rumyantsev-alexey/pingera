@@ -103,4 +103,10 @@ public class Task {
     @Column(name = "total")
     private Integer total;
 
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "actual")
+    private boolean actual;
+
 }

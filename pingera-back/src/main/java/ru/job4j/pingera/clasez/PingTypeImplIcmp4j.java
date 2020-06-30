@@ -22,12 +22,12 @@ public class PingTypeImplIcmp4j implements PingType{
     public String toString() {
 
         IcmpPingResponse one = res.get(0);
-        String header = "Pinging %s [%s] with %s bytes of data:\n\n";
-        String body = "Reply from %s: bytes=%s time=%sms TTL=%s\n";
-        String footer = "\nPing statistics for %s:\n"
-                + "    Packets: Sent = %s, Received = %s, Lost = %s (%s prc loss),\n"
-                + "Approximate round trip times in milli-seconds:\n"
-                + "    Minimum = %sms, Maximum = %sms, Average = %sms\n";
+        String header = "Pinging %s [%s] with %s bytes of data:" + System.lineSeparator() + System.lineSeparator();
+        String body = "Reply from %s: bytes=%s time=%sms TTL=%s" + System.lineSeparator();
+        String footer = System.lineSeparator() + "Ping statistics for %s:" + System.lineSeparator()
+                + "    Packets: Sent = %s, Received = %s, Lost = %s (%s prc loss)," + System.lineSeparator()
+                + "Approximate round trip times in milli-seconds:" + System.lineSeparator()
+                + "    Minimum = %sms, Maximum = %sms, Average = %sms" + System.lineSeparator();
 
         StringBuilder result = new StringBuilder();
         InetAddress ip = InetAddress.getByName(one.getHost());
