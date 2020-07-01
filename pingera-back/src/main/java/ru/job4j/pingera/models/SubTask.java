@@ -37,11 +37,9 @@ public class SubTask {
 
     @Getter
     @Setter
-    @NonNull
-    private boolean at_work;
+    private boolean work;
 
     @Getter
     @Setter
-    @NonNull
     private boolean complete;
 }

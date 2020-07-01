@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SubTaskRepository extends CrudRepository<SubTask, Long> {
-//    Iterable findAllByAt_workAndComplete(boolean at_work, boolean complete);
+    List<SubTask> findAllByWorkAndComplete(boolean at_work, boolean complete);
+    List<SubTask> findAllByComplete(boolean complete);
 }

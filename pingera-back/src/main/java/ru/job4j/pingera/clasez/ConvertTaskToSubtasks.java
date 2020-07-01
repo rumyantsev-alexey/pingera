@@ -38,7 +38,7 @@ public class ConvertTaskToSubtasks {
             SubTask st = new SubTask();
             st.setDate1(new Timestamp(task.getDate1().getTime() + period * (i - 1)));
             st.setTask(task);
-            st.setAt_work(false);
+            st.setWork(false);
             st.setComplete(false);
             result.add(st);
         }

@@ -109,4 +109,10 @@ public class Task {
     @Column(name = "actual")
     private boolean actual;
 
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "split")
+    private boolean split;
+
 }
