@@ -3,9 +3,12 @@ package ru.job4j.pingera.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import ru.job4j.pingera.models.Task;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -27,6 +30,7 @@ public class TaskDto {
     private String text4;
     private Integer total;
 
+    @SneakyThrows
     public Task convertToTask(UserDto udto) {
         Task result = new Task();
 
@@ -38,7 +42,10 @@ public class TaskDto {
         result.setTtl(this.getTtl());
         result.setTimeout(this.getTimeout());
         result.setText2(this.getText2());
-        result.setDate1(Timestamp.valueOf(this.getDate1().replace("T", " ") + ":00"));
+        System.out.println(this.date1);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy, hh:mm:ss");
+        Date d = format.parse(this.date1);
+        result.setDate1(new Timestamp(d.getTime()));
         result.setText3(this.getText3());
         result.setSellist2(this.getSellist2());
         result.setSellist3(this.getSellist3());

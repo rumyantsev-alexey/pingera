@@ -1,10 +1,12 @@
 package ru.job4j.pingera.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.job4j.pingera.clasez.ConvertTaskToSubtasks;
+import ru.job4j.pingera.clasez.SubTaskUtility;
 import ru.job4j.pingera.dto.TaskDto;
 import ru.job4j.pingera.dto.UserDto;
+import ru.job4j.pingera.models.SubTask;
 import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.models.User;
 import ru.job4j.pingera.repositories.SubTaskRepository;
@@ -31,17 +33,14 @@ public class MainController {
     private SubTaskRepository st;
 
     @GetMapping(value = "/getalltasksforauthuser")
-    public List<Task> GetAllTask(Principal principal) {
+    public List<Task> GetAllActualTask(Principal principal) {
         List<Task> result = new ArrayList<>();
         User user = u.findByName(principal.getName());
-        t.findAllByActualAndSplit(true, false).forEach(x -> {
-            if (x.getUser().getId() == user.getId()) {
-                result.add(x);
-            }
-        });
-         return result;
+        result = t.findAllByUserAndActual(user, true);
+        return result;
     }
 
+    @Transactional
     @PostMapping(value = "/posttask")
     public void PostTask(@RequestBody TaskDto newtask, Principal principal) {
         if (newtask.getName1() != null && principal != null) {
@@ -51,20 +50,39 @@ public class MainController {
             ntask.setSplit(true);
             ntask.setActual(true);
             ntask = t.save(ntask);
-            st.saveAll(new ConvertTaskToSubtasks().convert(ntask));
+            st.saveAll(new SubTaskUtility().convert(ntask));
         }
     }
 
+    @Transactional
     @DeleteMapping(value = "/deletetask/{id}")
     public void deleteTaskByTaskId(@PathVariable long id) {
         if (t.findById(id).isPresent()) {
+            Task task = t.findById(id).get();
+            st.deleteAllByTask(task);
             t.deleteById(id);
         }
     }
 
+    @GetMapping(value = "/getallcompletetasksforauthuser")
+    public List<Task> GetAllCompleteTask(Principal principal) {
+        User user = u.findByName(principal.getName());
+        List<Task> result = t.findAllByUserAndActual(user, false);
+        return result;
+    }
+
+
+    @Transactional
     @PostMapping(value = "/adduser")
-    public void addUser(@RequestBody User newuser) {
-    u.save(newuser);
+        public void addUser(@RequestBody User newuser) {
+        u.save(newuser);
+    }
+
+    @GetMapping(value = "/getallcompletesubtasksfortask/{id}")
+    public List<SubTask> GetAllCompleteSubTaskByTaskId(@PathVariable long id) {
+        Task task = t.findById(id).get();
+        List<SubTask> result = st.findAllByTaskAndComplete(task, true);
+        return result;
     }
 
 }
