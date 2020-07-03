@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.pingera.clasez.SubTaskUtility;
-import ru.job4j.pingera.dto.TaskDto;
-import ru.job4j.pingera.dto.UserDto;
 import ru.job4j.pingera.models.SubTask;
 import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.models.User;
@@ -14,7 +12,6 @@ import ru.job4j.pingera.repositories.TasksRepository;
 import ru.job4j.pingera.repositories.UsersRepository;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +22,6 @@ public class MainController {
 
     @Autowired
     private TasksRepository t;
-    @Autowired
-    private UserDto udto;
     @Autowired
     private UsersRepository u;
     @Autowired
@@ -42,15 +37,12 @@ public class MainController {
 
     @Transactional
     @PostMapping(value = "/posttask")
-    public void PostTask(@RequestBody TaskDto newtask, Principal principal) {
+    public void PostTask(@RequestBody Task newtask, Principal principal) {
         if (newtask.getName1() != null && principal != null) {
-            UserDto nnn = udto;
-            nnn.setName(principal.getName());
-            Task ntask = newtask.convertToTask(nnn);
-            ntask.setSplit(true);
-            ntask.setActual(true);
-            ntask = t.save(ntask);
-            st.saveAll(new SubTaskUtility().convert(ntask));
+            newtask.setSplit(true);
+            newtask.setActual(true);
+            newtask = t.save(newtask);
+            st.saveAll(new SubTaskUtility().convert(newtask));
         }
     }
 

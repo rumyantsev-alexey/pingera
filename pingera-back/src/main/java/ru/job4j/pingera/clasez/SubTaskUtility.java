@@ -36,7 +36,7 @@ public class SubTaskUtility {
         ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
         List<SubTask> list = st.findAllByComplete(false);
         for (SubTask l : list) {
-            st.delete(l);
+//            st.delete(l);
             scheduler.schedule(new Runnable() {
                                    @SneakyThrows
                                    @Override
