@@ -12,6 +12,7 @@ import ru.job4j.pingera.repositories.SubTaskRepository;
 import ru.job4j.pingera.repositories.TasksRepository;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,22 +34,33 @@ public class SubTaskUtility {
     @Transactional
     @Async
     public void initShedulerSubTasks() {
+        checkActualTasks();
         ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
         List<SubTask> list = st.findAllByComplete(false);
         for (SubTask l : list) {
-//            st.delete(l);
-            scheduler.schedule(new Runnable() {
-                                   @SneakyThrows
-                                   @Override
-                                   public void run() {
-                                       Task task = l.getTask();
-                                       PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                       l.setResult(new javax.sql.rowset.serial.SerialClob(p.toString().toCharArray()));
-                                       l.setComplete(true);
-                                   }
-                               },
-                    new Date(l.getDate1().getTime()));
-            l.setWork(true);
+            if (l.getDate1().getTime() > System.currentTimeMillis()) {
+                scheduler.schedule(new Runnable() {
+                                       @SneakyThrows
+                                       @Override
+                                       public void run() {
+                                           Task task = l.getTask();
+                                           if (isCorrectHost(task.getText2())) {
+                                               PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
+                                               l.setResult(p.toString());
+                                           } else {
+                                               l.setResult("Host not found");
+                                           }
+                                           l.setComplete(true);
+                                           st.save(l);
+                                       }
+                                   },
+                        new Date(l.getDate1().getTime()));
+                l.setWork(true);
+                System.out.println(l);
+            } else {
+                l.setResult("Dont work this subtask in time");
+                l.setComplete(true);
+            }
         }
         st.saveAll(list);
     }
@@ -56,25 +68,25 @@ public class SubTaskUtility {
     @Transactional
     @Async
     public void everTimeShedulerSubTasks() {
+        checkActualTasks();
         ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
         List<SubTask> list = st.findAllByWorkAndComplete(false, false);
         for (SubTask l: list) {
-//            st.delete(l);
             scheduler.schedule(new Runnable() {
                                    @SneakyThrows
                                    @Override
                                    public void run() {
-                                        Task task = l.getTask();
-                                        PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                        l.setResult(new javax.sql.rowset.serial.SerialClob(p.toString().toCharArray()));
-                                        l.setComplete(true);
-                                        if (task.isSplit() && st.findAllByTaskAndComplete(task, true).size() > 0 && st.findAllByTaskAndComplete(task, false).size() == 0) {
-                                            task.setActual(false);
-//                                            t.deleteById(task.getId());
-                                            t.save(task);
-                                        }
-                                    }
-                                },
+                                       Task task = l.getTask();
+                                       if (isCorrectHost(task.getText2())) {
+                                           PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
+                                           l.setResult(p.toString());
+                                       } else {
+                                           l.setResult("Host not found");
+                                       }
+                                       l.setComplete(true);
+                                       st.save(l);
+                                   }
+                               },
                     new Date(l.getDate1().getTime()));
             l.setWork(true);
         }
@@ -117,4 +129,25 @@ public class SubTaskUtility {
         return result;
     }
 
+     boolean isCorrectHost(String name) {
+        boolean result = true;
+        try {
+            InetAddress.getByName(name);
+        } catch (UnknownHostException e) {
+            result = false;
+        }
+        return  result;
+    }
+
+    @Transactional
+    void checkActualTasks() {
+        List<Task> lt = t.findAllByActual(true);
+        for (Task t: lt) {
+            List<SubTask> lst = st.findAllByTaskAndComplete(t, false);
+            if (lst.size() == 0) {
+                t.setActual(false);
+            }
+        }
+        t.saveAll(lt);
+    }
 }

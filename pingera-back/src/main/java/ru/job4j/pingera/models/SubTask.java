@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Clob;
 import java.sql.Timestamp;
 
 @Entity
@@ -33,7 +32,8 @@ public class SubTask {
 
     @Getter
     @Setter
-    private Clob result;
+//    @Lob
+    private String result;
 
     @Getter
     @Setter

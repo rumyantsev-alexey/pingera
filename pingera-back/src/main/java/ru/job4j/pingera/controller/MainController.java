@@ -41,6 +41,8 @@ public class MainController {
         if (newtask.getName1() != null && principal != null) {
             newtask.setSplit(true);
             newtask.setActual(true);
+            User user = u.findByName(principal.getName());
+            newtask.setUser(user);
             newtask = t.save(newtask);
             st.saveAll(new SubTaskUtility().convert(newtask));
         }
