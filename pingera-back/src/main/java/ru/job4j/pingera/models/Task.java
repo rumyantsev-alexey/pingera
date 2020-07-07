@@ -115,4 +115,10 @@ public class Task {
     @Column(name = "split")
     private boolean split;
 
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "report")
+    private boolean report;
+
 }

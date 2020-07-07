@@ -33,6 +33,14 @@ public class ApplicationStartup
             }
         }, new Date(System.currentTimeMillis() + 60000), 2000);
 
+        taskScheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                cst.sendEmailResultCompleteTasks();
+                System.out.println("Run sendEmailResultCompleteTasks() in time " + new Date(System.currentTimeMillis()));
+            }
+        }, new Date(System.currentTimeMillis() + 100000), 5000);
+
     }
 
 }

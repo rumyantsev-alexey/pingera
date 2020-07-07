@@ -5,6 +5,8 @@ import net.bytebuddy.build.Plugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.job4j.pingera.security.UserDetailServiceImpl;
 
 import java.util.Arrays;
+import java.util.Properties;
 
 @Configuration
 @EnableWebSecurity
@@ -34,25 +37,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-        .antMatchers("/").permitAll()
-        .antMatchers("/online/**").permitAll()
-        .antMatchers("/login").permitAll()
-        .antMatchers("/rest/**").permitAll()
-        .antMatchers("/newuser").permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .httpBasic()
-        .and()
-        .cors()
-        .configurationSource(corsConfigurationSource())
-        .and()
-        .csrf().disable();
+                .antMatchers("/").permitAll()
+                .antMatchers("/online/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/rest/**").permitAll()
+                .antMatchers("/newuser").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic()
+                .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance ();
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
@@ -67,4 +70,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }}
+    }
+
+}

@@ -43,6 +43,9 @@ public class MainController {
             newtask.setActual(true);
             User user = u.findByName(principal.getName());
             newtask.setUser(user);
+            newtask.setReport(false);
+            newtask.setActual(true);
+            newtask.setSplit(true);
             newtask = t.save(newtask);
             st.saveAll(new SubTaskUtility().convert(newtask));
         }

@@ -2,6 +2,8 @@ package ru.job4j.pingera.clasez;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
@@ -29,6 +31,9 @@ public class SubTaskUtility {
     @Autowired
     private TasksRepository t;
 
+    @Autowired
+    private JavaMailSender mail;
+
     ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
 
     @Transactional
@@ -51,6 +56,8 @@ public class SubTaskUtility {
                                                l.setResult("Host not found");
                                            }
                                            l.setComplete(true);
+                                           String s = l.getResult();
+                                           l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
                                            st.save(l);
                                        }
                                    },
@@ -84,6 +91,8 @@ public class SubTaskUtility {
                                            l.setResult("Host not found");
                                        }
                                        l.setComplete(true);
+                                       String s = l.getResult();
+                                       l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
                                        st.save(l);
                                    }
                                },
@@ -146,8 +155,31 @@ public class SubTaskUtility {
             List<SubTask> lst = st.findAllByTaskAndComplete(t, false);
             if (lst.size() == 0) {
                 t.setActual(false);
+                t.setReport(false);
             }
         }
         t.saveAll(lt);
     }
+
+    @Async
+    @Transactional
+    public void sendEmailResultCompleteTasks() {
+        String result = new String();
+        List<Task> list = t.findAllByActualAndReport(false, false);
+        for( Task l: list) {
+            result = new String();
+            List<SubTask> lst = st.findAllByTaskAndComplete(l, true);
+            for (SubTask st: lst) {
+                result+=System.lineSeparator() + st.getResult();
+            }
+            l.setReport(true);
+            t.save(l);
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo("telesyn73@mail.ru");
+            message.setSubject(String.format("Result of task №%s", l.getId()));
+            message.setText(result);
+            mail.send(message);
+        }
+    }
+
 }
