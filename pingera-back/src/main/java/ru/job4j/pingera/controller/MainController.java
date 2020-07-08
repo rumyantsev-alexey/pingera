@@ -1,6 +1,8 @@
 package ru.job4j.pingera.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.pingera.clasez.SubTaskUtility;
@@ -37,7 +39,7 @@ public class MainController {
 
     @Transactional
     @PostMapping(value = "/posttask")
-    public void PostTask(@RequestBody Task newtask, Principal principal) {
+    public ResponseEntity PostTask(@RequestBody Task newtask, Principal principal) {
         if (newtask.getName1() != null && principal != null) {
             newtask.setSplit(true);
             newtask.setActual(true);
@@ -48,16 +50,22 @@ public class MainController {
             newtask.setSplit(true);
             newtask = t.save(newtask);
             st.saveAll(new SubTaskUtility().convert(newtask));
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
     @Transactional
     @DeleteMapping(value = "/deletetask/{id}")
-    public void deleteTaskByTaskId(@PathVariable long id) {
+    public ResponseEntity deleteTaskByTaskId(@PathVariable long id) {
         if (t.findById(id).isPresent()) {
             Task task = t.findById(id).get();
             st.deleteAllByTask(task);
             t.deleteById(id);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -71,8 +79,14 @@ public class MainController {
 
     @Transactional
     @PostMapping(value = "/adduser")
-        public void addUser(@RequestBody User newuser) {
-        u.save(newuser);
+        public ResponseEntity addUser(@RequestBody User newuser) {
+        User usr = u.findByName(newuser.getName());
+        if (usr == null) {
+            u.save(newuser);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/getallcompletesubtasksfortask/{id}")
