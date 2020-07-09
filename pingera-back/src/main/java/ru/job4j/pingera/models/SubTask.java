@@ -42,4 +42,19 @@ public class SubTask {
     @Getter
     @Setter
     private boolean complete;
+
+    @Getter
+    @Setter
+    private boolean successfully;
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append(System.out.format("Subtask №: %s from task №:%s" + System.lineSeparator(), id, task.getId()));
+        result.append(System.out.format("Do in local time: %s" + System.lineSeparator(), date1));
+        result.append(System.out.format("Successfully: %s" + System.lineSeparator(), successfully));
+        result.append("Result:" + System.lineSeparator());
+        result.append(result + System.lineSeparator());
+        return result.toString();
+    }
 }
+

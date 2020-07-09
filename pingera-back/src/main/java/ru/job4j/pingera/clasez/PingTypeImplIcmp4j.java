@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class PingTypeImplIcmp4j implements PingType{
+public class PingTypeImplIcmp4j implements PingType {
 
     private List<IcmpPingResponse> res;
 

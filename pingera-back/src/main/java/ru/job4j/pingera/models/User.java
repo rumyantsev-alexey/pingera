@@ -36,4 +36,10 @@ public class User {
         @Email
         @Column(name = "email")
         private String email;
+
+        public String toString() {
+         StringBuilder result = new StringBuilder();
+         result.append(System.out.format("user: %s (id = %s) email:%s", name, id, email));
+         return result.toString();
+        }
 }

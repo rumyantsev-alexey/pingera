@@ -6,15 +6,25 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 import ru.job4j.pingera.clasez.SubTaskUtility;
+import ru.job4j.pingera.models.SubTask;
+import ru.job4j.pingera.repositories.SubTaskRepository;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
-public class ApplicationStartup
-        implements ApplicationListener<ApplicationReadyEvent> {
+public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+
+    private static final int delay_for_web = 60000;
+    private static final int period_for_web = 2000;
+    private static final int delay_for_mail = 10000;
+    private static final int period_for_mail = 300000;
 
     @Autowired
     private SubTaskUtility cst;
+
+    @Autowired
+    private SubTaskRepository st;
 
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
@@ -22,24 +32,24 @@ public class ApplicationStartup
 
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
-        cst.initShedulerSubTasks();
-        System.out.println("Run initShedulerSubTasks() in time " + new Date(System.currentTimeMillis()));
+        List<SubTask> list = st.findAllByComplete(false);
+        cst.runSubTask(list);
+//        System.out.println("Run initShedulerSubTasks() in time " + new Date(System.currentTimeMillis()));
 
         taskScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                cst.everTimeShedulerSubTasks();
-                System.out.println("Run everTimeShedulerSubTasks() in time " + new Date(System.currentTimeMillis()));
+                List<SubTask> list = st.findAllByWorkAndComplete(false, false);
+                cst.runSubTask(list);
             }
-        }, new Date(System.currentTimeMillis() + 60000), 2000);
+        }, new Date(System.currentTimeMillis() + delay_for_web), period_for_web);
 
         taskScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                cst.sendEmailResultCompleteTasks();
-                System.out.println("Run sendEmailResultCompleteTasks() in time " + new Date(System.currentTimeMillis()));
+                cst.sendEmailResultCompleteSubTasks();
             }
-        }, new Date(System.currentTimeMillis() + 100000), 5000);
+        }, new Date(System.currentTimeMillis() + delay_for_mail), period_for_mail);
 
     }
 

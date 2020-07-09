@@ -36,72 +36,6 @@ public class SubTaskUtility {
 
     ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
 
-    @Transactional
-    @Async
-    public void initShedulerSubTasks() {
-        checkActualTasks();
-        ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
-        List<SubTask> list = st.findAllByComplete(false);
-        for (SubTask l : list) {
-            if (l.getDate1().getTime() > System.currentTimeMillis()) {
-                scheduler.schedule(new Runnable() {
-                                       @SneakyThrows
-                                       @Override
-                                       public void run() {
-                                           Task task = l.getTask();
-                                           if (isCorrectHost(task.getText2())) {
-                                               PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                               l.setResult(p.toString());
-                                           } else {
-                                               l.setResult("Host not found");
-                                           }
-                                           l.setComplete(true);
-                                           String s = l.getResult();
-                                           l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
-                                           st.save(l);
-                                       }
-                                   },
-                        new Date(l.getDate1().getTime()));
-                l.setWork(true);
-                System.out.println(l);
-            } else {
-                l.setResult("Dont work this subtask in time");
-                l.setComplete(true);
-            }
-        }
-        st.saveAll(list);
-    }
-
-    @Transactional
-    @Async
-    public void everTimeShedulerSubTasks() {
-        checkActualTasks();
-        ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
-        List<SubTask> list = st.findAllByWorkAndComplete(false, false);
-        for (SubTask l: list) {
-            scheduler.schedule(new Runnable() {
-                                   @SneakyThrows
-                                   @Override
-                                   public void run() {
-                                       Task task = l.getTask();
-                                       if (isCorrectHost(task.getText2())) {
-                                           PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                           l.setResult(p.toString());
-                                       } else {
-                                           l.setResult("Host not found");
-                                       }
-                                       l.setComplete(true);
-                                       String s = l.getResult();
-                                       l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
-                                       st.save(l);
-                                   }
-                               },
-                    new Date(l.getDate1().getTime()));
-            l.setWork(true);
-        }
-        st.saveAll(list);
-    }
-
     public List<SubTask> convert(Task task) {
         List<SubTask> result = new ArrayList<>();
         long period;
@@ -155,7 +89,6 @@ public class SubTaskUtility {
             List<SubTask> lst = st.findAllByTaskAndComplete(t, false);
             if (lst.size() == 0) {
                 t.setActual(false);
-                t.setReport(false);
             }
         }
         t.saveAll(lt);
@@ -163,23 +96,57 @@ public class SubTaskUtility {
 
     @Async
     @Transactional
-    public void sendEmailResultCompleteTasks() {
-        String result = new String();
-        List<Task> list = t.findAllByActualAndReport(false, false);
-        for( Task l: list) {
-            result = new String();
-            List<SubTask> lst = st.findAllByTaskAndComplete(l, true);
-            for (SubTask st: lst) {
-                result+=System.lineSeparator() + st.getResult();
-            }
-            l.setReport(true);
-            t.save(l);
+    public void sendEmailResultCompleteSubTasks() {
+        List<SubTask> list = st.findAllByWorkAndComplete(true, true);
+        for (SubTask l: list) {
+            l.setWork(false);
+            st.save(l);
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo("telesyn73@mail.ru");
-            message.setSubject(String.format("Result of task №%s", l.getId()));
-            message.setText(result);
+            message.setSubject(String.format("Result subtask №%s of task №%s", l.getId(), l.getTask().getId()));
+            message.setText(l.toString());
             mail.send(message);
         }
     }
 
+
+    @Async
+    @Transactional
+    public void runSubTask(List<SubTask> list) {
+        ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
+        checkActualTasks();
+        for (SubTask l : list) {
+            if (l.getDate1().getTime() > System.currentTimeMillis()) {
+                scheduler.schedule(new Runnable() {
+                                       @SneakyThrows
+                                       @Override
+                                       public void run() {
+                                           boolean Successfully = false;
+                                           Task task = l.getTask();
+                                           if (isCorrectHost(task.getText2())) {
+                                               PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
+                                               l.setResult(p.toString());
+                                               Successfully = p.isCorrect();
+                                           } else {
+                                               l.setResult("Host not found");
+                                           }
+                                           l.setComplete(true);
+                                           String s = l.getResult();
+                                           l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
+                                           l.setSuccessfully(Successfully);
+                                           l.setWork(true);
+                                           st.save(l);
+                                       }
+                                   },
+                        new Date(l.getDate1().getTime()));
+                l.setWork(true);
+                System.out.println(l);
+            } else {
+                l.setResult("Dont work this subtask in time");
+                l.setComplete(true);
+                l.setWork(true);
+            }
+        }
+        st.saveAll(list);
+    }
 }

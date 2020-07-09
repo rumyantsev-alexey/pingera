@@ -11,5 +11,4 @@ import java.util.List;
 public interface TasksRepository extends CrudRepository<Task, Long> {
     List<Task> findAllByActual(boolean actual);
     List<Task> findAllByUserAndActual(User user, boolean actual);
-    List<Task> findAllByActualAndReport(boolean actual, boolean report);
 }

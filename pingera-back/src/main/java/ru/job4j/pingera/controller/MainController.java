@@ -45,7 +45,6 @@ public class MainController {
             newtask.setActual(true);
             User user = u.findByName(principal.getName());
             newtask.setUser(user);
-            newtask.setReport(false);
             newtask.setActual(true);
             newtask.setSplit(true);
             newtask = t.save(newtask);
@@ -85,7 +84,7 @@ public class MainController {
             u.save(newuser);
             return new ResponseEntity(HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
