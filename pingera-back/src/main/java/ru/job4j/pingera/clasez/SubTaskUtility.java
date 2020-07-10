@@ -13,8 +13,8 @@ import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.repositories.SubTaskRepository;
 import ru.job4j.pingera.repositories.TasksRepository;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +33,9 @@ public class SubTaskUtility {
 
     @Autowired
     private JavaMailSender mail;
+
+    @Autowired
+    private  ClobUtility clob;
 
     ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
 
@@ -72,11 +75,15 @@ public class SubTaskUtility {
         return result;
     }
 
-     boolean isCorrectHost(String name) {
+     public boolean isCorrectHost(String name) {
         boolean result = true;
+        InetAddress inet;
         try {
-            InetAddress.getByName(name);
-        } catch (UnknownHostException e) {
+            inet = InetAddress.getByName(name);
+            if (!inet.isReachable(1000)) {
+                result = false;
+            }
+        } catch (IOException e) {
             result = false;
         }
         return  result;
@@ -104,7 +111,9 @@ public class SubTaskUtility {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo("telesyn73@mail.ru");
             message.setSubject(String.format("Result subtask №%s of task №%s", l.getId(), l.getTask().getId()));
-            message.setText(l.toString());
+            String res = l.getTask().toString() + System.lineSeparator();
+            res+=l.toString() + System.lineSeparator();
+            message.setText(res);
             mail.send(message);
         }
     }
@@ -125,14 +134,12 @@ public class SubTaskUtility {
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
                                                PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                               l.setResult(p.toString());
+                                               l.setResult(clob.toClob(p.toString()));
                                                Successfully = p.isCorrect();
                                            } else {
-                                               l.setResult("Host not found");
+                                               l.setResult(clob.toClob("Host not found"));
                                            }
                                            l.setComplete(true);
-                                           String s = l.getResult();
-                                           l.setResult(s.substring(0, s.length() > 255 ? 254 : s.length()));
                                            l.setSuccessfully(Successfully);
                                            l.setWork(true);
                                            st.save(l);
@@ -140,9 +147,8 @@ public class SubTaskUtility {
                                    },
                         new Date(l.getDate1().getTime()));
                 l.setWork(true);
-                System.out.println(l);
             } else {
-                l.setResult("Dont work this subtask in time");
+                l.setResult(clob.toClob("Dont work this subtask in time"));
                 l.setComplete(true);
                 l.setWork(true);
             }

@@ -39,7 +39,7 @@ public class User {
 
         public String toString() {
          StringBuilder result = new StringBuilder();
-         result.append(System.out.format("user: %s (id = %s) email:%s", name, id, email));
+         result.append("user: " + name + " (id = " + id + ") email:" + email);
          return result.toString();
         }
 }

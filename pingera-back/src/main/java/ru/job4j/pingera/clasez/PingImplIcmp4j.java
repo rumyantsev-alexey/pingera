@@ -25,7 +25,7 @@ public class PingImplIcmp4j implements Ping {
 
     @Override
     public void setCount(int cnt) {
-        this.count = cnt;
+        this.count = cnt + 1;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PingImplIcmp4j implements Ping {
     @Override
     public PingType ping(InetAddress ip4, int count) {
         this.setIp(ip4);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count + 1);
         return new PingTypeImplIcmp4j(res);
     }
 
@@ -67,7 +67,7 @@ public class PingImplIcmp4j implements Ping {
     public PingType ping(InetAddress ip4, int count, int packetsize) {
         this.setIp(ip4);
         this.setPacketsize(packetsize);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count + 1);
         return new PingTypeImplIcmp4j(res);
     }
 
@@ -76,7 +76,7 @@ public class PingImplIcmp4j implements Ping {
         this.setIp(ip4);
         this.setPacketsize(packetsize);
         this.setTTL(ttl);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count + 1);
         return new PingTypeImplIcmp4j(res);
     }
 
@@ -86,7 +86,7 @@ public class PingImplIcmp4j implements Ping {
         this.setPacketsize(packetsize);
         this.setTTL(ttl);
         this.setTimeOut(timeout);
-        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count);
+        List<IcmpPingResponse> res = IcmpPingUtil.executePingRequests(ip, count < 0 ? 2: count + 1);
         return new PingTypeImplIcmp4j(res);
     }
 }

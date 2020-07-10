@@ -1,11 +1,9 @@
 package ru.job4j.pingera.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Clob;
 import java.sql.Timestamp;
 
 @Entity
@@ -32,8 +30,8 @@ public class SubTask {
 
     @Getter
     @Setter
-//    @Lob
-    private String result;
+    @Lob
+    private Clob result;
 
     @Getter
     @Setter
@@ -47,13 +45,16 @@ public class SubTask {
     @Setter
     private boolean successfully;
 
+    @SneakyThrows
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(System.out.format("Subtask №: %s from task №:%s" + System.lineSeparator(), id, task.getId()));
-        result.append(System.out.format("Do in local time: %s" + System.lineSeparator(), date1));
-        result.append(System.out.format("Successfully: %s" + System.lineSeparator(), successfully));
+        result.append("Subtask №: " + id + " from task №:" + task.getId() + System.lineSeparator());
+        result.append("Do in local time: " + date1 + System.lineSeparator());
+        result.append("Work: " + work + System.lineSeparator());
+        result.append("Complete: " + complete + System.lineSeparator());
+        result.append("Successfully: " + successfully + System.lineSeparator());
         result.append("Result:" + System.lineSeparator());
-        result.append(result + System.lineSeparator());
+        result.append(this.result.getSubString(1, (int) this.result.length()) + System.lineSeparator());
         return result.toString();
     }
 }

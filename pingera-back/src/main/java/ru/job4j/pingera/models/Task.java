@@ -117,11 +117,11 @@ public class Task {
 
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(System.out.format("Task: %s (id = %s)" + System.lineSeparator(), name1, id));
-        result.append(System.out.format("From: %s" + System.lineSeparator(), user));
-        result.append(System.out.format("Uses %s (parameters: cnt=%s packetsize=%s ttl=%s timeout=%s)" + System.lineSeparator(),sellist1, cnt, packetsize, ttl, timeout));
-        result.append(System.out.format("To host %s at local time %s. Every %s %s. Tota: %s times." + System.lineSeparator(), text2, date1, text3, sellist2, total));
-        result.append(System.out.format("With %s uses %s with attr %s" + System.lineSeparator(),sellist3, sellist4, text4));
+        result.append("Task: " + name1 + " (id = " + id + ")" + System.lineSeparator());
+        result.append(user + System.lineSeparator());
+        result.append("Uses " + sellist1 + " (parameters: cnt=" + cnt + " packetsize=" + packetsize + " ttl=" + ttl + " timeout=" + timeout + ")" + System.lineSeparator());
+        result.append("To host " + text2 + " at local time " + date1 + ". Every " + text3 + " " + sellist2 + ". Total: " + total + " times." + System.lineSeparator());
+        result.append("With " + sellist3 + " uses " + sellist4 + " with attr " + text4 + System.lineSeparator());
         return result.toString();
     }
 
