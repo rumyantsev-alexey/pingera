@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.pingera.clasez.SubTaskUtility;
+import ru.job4j.pingera.dto.SubTaskDto;
 import ru.job4j.pingera.models.SubTask;
 import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.models.User;
@@ -89,9 +90,11 @@ public class MainController {
     }
 
     @GetMapping(value = "/getallcompletesubtasksfortask/{id}")
-    public List<SubTask> GetAllCompleteSubTaskByTaskId(@PathVariable long id) {
+    public List<SubTaskDto> GetAllCompleteSubTaskByTaskId(@PathVariable long id) {
+        List<SubTaskDto> result = new ArrayList<>();
         Task task = t.findById(id).get();
-        List<SubTask> result = st.findAllByTaskAndComplete(task, true);
+        List<SubTask> temp = st.findAllByTaskAndComplete(task, true);
+        temp.forEach((x) -> result.add(new SubTaskDto().convert(x)));
         return result;
     }
 

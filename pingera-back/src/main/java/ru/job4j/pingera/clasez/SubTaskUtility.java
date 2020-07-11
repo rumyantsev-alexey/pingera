@@ -34,9 +34,6 @@ public class SubTaskUtility {
     @Autowired
     private JavaMailSender mail;
 
-    @Autowired
-    private  ClobUtility clob;
-
     ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
 
     public List<SubTask> convert(Task task) {
@@ -134,10 +131,10 @@ public class SubTaskUtility {
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
                                                PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                               l.setResult(clob.toClob(p.toString()));
+                                               l.setResult(p.toString().getBytes());
                                                Successfully = p.isCorrect();
                                            } else {
-                                               l.setResult(clob.toClob("Host not found"));
+                                               l.setResult("Host not found".getBytes());
                                            }
                                            l.setComplete(true);
                                            l.setSuccessfully(Successfully);
@@ -148,7 +145,7 @@ public class SubTaskUtility {
                         new Date(l.getDate1().getTime()));
                 l.setWork(true);
             } else {
-                l.setResult(clob.toClob("Dont work this subtask in time"));
+                l.setResult("Dont work this subtask in time".getBytes());
                 l.setComplete(true);
                 l.setWork(true);
             }

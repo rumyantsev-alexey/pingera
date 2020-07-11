@@ -9,8 +9,6 @@ import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.models.User;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +26,7 @@ public class useTest {
         SubTask st = new SubTask();
         t.setUser(us);
         st.setTask(t);
+        st.setResult("Non show".getBytes());
         System.out.println("---------------------------- Print user");
         System.out.println(us);
         System.out.println("---------------------------- Print task");

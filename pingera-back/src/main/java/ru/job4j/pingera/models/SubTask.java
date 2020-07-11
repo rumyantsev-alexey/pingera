@@ -3,7 +3,7 @@ package ru.job4j.pingera.models;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Clob;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
 @Entity
@@ -30,8 +30,8 @@ public class SubTask {
 
     @Getter
     @Setter
-    @Lob
-    private Clob result;
+//    @Lob
+    private byte[] result;
 
     @Getter
     @Setter
@@ -54,7 +54,7 @@ public class SubTask {
         result.append("Complete: " + complete + System.lineSeparator());
         result.append("Successfully: " + successfully + System.lineSeparator());
         result.append("Result:" + System.lineSeparator());
-        result.append(this.result.getSubString(1, (int) this.result.length()) + System.lineSeparator());
+        result.append( new String(this.result, StandardCharsets.UTF_8) + System.lineSeparator());
         return result.toString();
     }
 }
