@@ -105,13 +105,15 @@ public class SubTaskUtility {
         for (SubTask l: list) {
             l.setWork(false);
             st.save(l);
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("telesyn73@mail.ru");
-            message.setSubject(String.format("Result subtask №%s of task №%s", l.getId(), l.getTask().getId()));
-            String res = l.getTask().toString() + System.lineSeparator();
-            res+=l.toString() + System.lineSeparator();
-            message.setText(res);
-            mail.send(message);
+            if (l.getTask().getSellist4() == ToolHandlers.email) {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setTo("telesyn73@mail.ru");
+                message.setSubject(String.format("Result subtask №%s of task №%s", l.getId(), l.getTask().getId()));
+                String res = l.getTask().toString() + System.lineSeparator();
+                res += l.toString() + System.lineSeparator();
+                message.setText(res);
+                mail.send(message);
+            }
         }
     }
 
@@ -130,9 +132,9 @@ public class SubTaskUtility {
                                            boolean Successfully = false;
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
-                                               PingType p = new PingImplIcmp4j().ping(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
-                                               l.setResult(p.toString().getBytes());
-                                               Successfully = p.isCorrect();
+                                                    chooseTool ct = new chooseTool();
+                                                    l.setResult(ct.getResultWithTools(task).getBytes());
+                                                    Successfully = true;
                                            } else {
                                                l.setResult("Host not found".getBytes());
                                            }

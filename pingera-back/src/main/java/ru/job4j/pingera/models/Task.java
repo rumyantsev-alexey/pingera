@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import ru.job4j.pingera.clasez.Tools;
+import ru.job4j.pingera.clasez.ToolHandlers;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -33,7 +36,7 @@ public class Task {
     @Setter
     @NonNull
     @Column(name = "tools")
-    private String sellist1;
+    private Tools sellist1;
 
     @Getter
     @Setter
@@ -90,7 +93,7 @@ public class Task {
     @Getter
     @Setter
     @Column(name = "filter2")
-    private String sellist4;
+    private ToolHandlers sellist4;
 
     @Getter
     @Setter
