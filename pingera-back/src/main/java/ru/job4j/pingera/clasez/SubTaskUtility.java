@@ -126,15 +126,15 @@ public class SubTaskUtility {
         for (SubTask l : list) {
             if (l.getDate1().getTime() > System.currentTimeMillis()) {
                 scheduler.schedule(new Runnable() {
-                                       @SneakyThrows
-                                       @Override
+                                        @Override
                                        public void run() {
                                            boolean Successfully = false;
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
                                                     chooseTool ct = new chooseTool();
-                                                    l.setResult(ct.getResultWithTools(task).getBytes());
-                                                    Successfully = true;
+                                                    Result r = ct.getResultWithTools(task);
+                                                    l.setResult(r.getText().getBytes());
+                                                    Successfully = r.isResultStatus();
                                            } else {
                                                l.setResult("Host not found".getBytes());
                                            }
