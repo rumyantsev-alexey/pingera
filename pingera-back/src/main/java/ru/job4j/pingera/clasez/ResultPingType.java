@@ -1,6 +1,6 @@
 package ru.job4j.pingera.clasez;
 
-public interface PingType {
+public interface ResultPingType {
     boolean isCorrect();
 
 }

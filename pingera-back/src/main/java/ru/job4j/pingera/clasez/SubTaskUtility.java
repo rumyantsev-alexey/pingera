@@ -122,7 +122,6 @@ public class SubTaskUtility {
     @Transactional
     public void runSubTask(List<SubTask> list) {
         ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
-        checkActualTasks();
         for (SubTask l : list) {
             if (l.getDate1().getTime() > System.currentTimeMillis()) {
                 scheduler.schedule(new Runnable() {
@@ -132,9 +131,9 @@ public class SubTaskUtility {
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
                                                     chooseTool ct = new chooseTool();
-                                                    Result r = ct.getResultWithTools(task);
-                                                    l.setResult(r.getText().getBytes());
-                                                    Successfully = r.isResultStatus();
+                                                    ResultOfNetworkTools r = ct.getResultWithTools(task);
+                                                    l.setResult(r.getResult().getBytes());
+                                                    Successfully = r.isSuccess();
                                            } else {
                                                l.setResult("Host not found".getBytes());
                                            }
@@ -153,5 +152,6 @@ public class SubTaskUtility {
             }
         }
         st.saveAll(list);
+        checkActualTasks();
     }
 }

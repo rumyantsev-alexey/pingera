@@ -1,15 +1,16 @@
 package ru.job4j.pingera.clasez;
 
 
+import lombok.SneakyThrows;
 import org.icmp4j.IcmpPingResponse;
+import org.icmp4j.IcmpPingUtil;
 import org.icmp4j.IcmpTraceRouteRequest;
 import org.icmp4j.IcmpTraceRouteUtil;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 /**
@@ -53,19 +54,22 @@ import java.util.TreeMap;
  *     [junit] ]
  */
 @Component
-public class TracerouteImplIcmpTraceroute implements Traceroute {
+public class ResultTracerouteImplIcmp4j extends ResultOfNetworkTools<ResultTracerouteType> {
 
-    private InetAddress ip = InetAddress.getLoopbackAddress();
     private IcmpTraceRouteRequest ipr = new IcmpTraceRouteRequest();
 
-    {
-        ipr.setHost(InetAddress.getLoopbackAddress().toString());
+    @Override
+    public void setIp(InetAddress host) {
+        ipr.setHost(host.getHostAddress());
     }
 
     @Override
-    public void setIp(String host) throws UnknownHostException {
-        this.ip = InetAddress.getByName(host);
+    public void setIp(String host) {
         this.ipr.setHost(host);
+    }
+
+    @Override
+    public void setCount(int cnt) {
     }
 
     @Override
@@ -83,44 +87,49 @@ public class TracerouteImplIcmpTraceroute implements Traceroute {
         this.ipr.setTimeout(ttl);
     }
 
+    @SneakyThrows
     @Override
-    public Map<Integer, IcmpPingResponse> traceroute() {
-        Map<Integer, IcmpPingResponse> list;
-        list = IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap();
-        return list;
+    public ResultTracerouteType doit() {
+        ResultTracerouteTypeImplIcmp4J res = new ResultTracerouteTypeImplIcmp4J();
+        res.setIp(InetAddress.getByName(ipr.getHost()));
+        return res;
     }
 
     @Override
-    public String reportTraceroute(Map<Integer, IcmpPingResponse> list) {
-        String header = "Tracing route to %s [%s]\n"
-                + "over a maximum of 30 hops:\n\n";
-        String body = "%s  %s ms     %s ms     %s ms  %s [%s]\n";
-        String footer = "\nTrace complete.";
-        StringBuilder result = new StringBuilder();
-        String host = list.get(list.size()).getHost();
-        result.append(String.format(header, ip.getHostName(), ip.getHostAddress()));
-        for (Integer i: normal(list).keySet()) {
-            InetAddress a = InetAddress.getLoopbackAddress();
-            try {
-                a = InetAddress.getByName(list.get(i).getHost());
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-            result.append(String.format(body, i, list.get(i).getDuration(), list.get(i).getDuration(), list.get(i).getDuration(), a.getHostName(), a.getHostAddress()));
-        }
-        result.append(footer);
-        return result.toString();
-    }
-
-    private Map<Integer, IcmpPingResponse> normal(Map<Integer, IcmpPingResponse> list) {
-        Map<Integer, IcmpPingResponse> result = new TreeMap<>();
-        for (Integer i: list.keySet()) {
-            IcmpPingResponse a = list.get(i);
-            result.put(i, a);
-            if (a.getSuccessFlag()) {
+    public ResultTracerouteType doit(InetAddress ipa, int... op) {
+        ResultTracerouteType res = new ResultTracerouteTypeImplIcmp4J();
+        switch (op.length) {
+            case 0:
+            case 1:
+                this.setIp(ipa);
+                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
                 break;
-            }
+            case 2:
+                this.setIp(ipa);
+                this.setCount(op[0]);
+                this.setPacketsize(op[1]);
+                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                break;
+            case 3:
+                this.setIp(ipa);
+                this.setCount(op[0]);
+                this.setPacketsize(op[1]);
+                this.setTTL(op[2]);
+                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                break;
+            case 4:
+                this.setIp(ipa);
+                this.setCount(op[0]);
+                this.setPacketsize(op[1]);
+                this.setTTL(op[2]);
+                this.setTimeOut(op[3]);
+                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                break;
+            default:
+ //               res.(new ArrayList<>());
+                break;
         }
-        return result;
+        return res;
     }
+
 }

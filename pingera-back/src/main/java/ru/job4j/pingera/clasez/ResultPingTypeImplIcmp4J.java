@@ -4,16 +4,17 @@ import lombok.*;
 import org.icmp4j.IcmpPingResponse;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Setter
 @Getter
-public class PingTypeImplIcmp4j implements PingType {
+public class ResultPingTypeImplIcmp4J implements ResultPingType {
 
-    private List<IcmpPingResponse> res;
+    private List<IcmpPingResponse> res = new ArrayList<>();
 
-    public PingTypeImplIcmp4j(List<IcmpPingResponse> res) {
+    public ResultPingTypeImplIcmp4J(List<IcmpPingResponse> res) {
         this.res = res;
     }
 
@@ -56,7 +57,16 @@ public class PingTypeImplIcmp4j implements PingType {
 
     @Override
     public boolean isCorrect() {
-        return res.get(0).getSuccessFlag();
+        boolean result = false;
+        try {
+            result = res.get(0).getSuccessFlag();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        finally {
+            return result;
+        }
     }
 
 }

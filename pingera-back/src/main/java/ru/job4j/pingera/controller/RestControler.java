@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.job4j.pingera.clasez.Ping;
-import ru.job4j.pingera.clasez.PingType;
-import ru.job4j.pingera.clasez.PingTypeImplIcmp4j;
-import ru.job4j.pingera.clasez.Traceroute;
+import ru.job4j.pingera.clasez.*;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -22,14 +19,14 @@ import java.net.UnknownHostException;
 public class RestControler {
 
     @Autowired
-    Ping ppp;
+    ResultPingImplIcmp4j ppp;
 
 
     @Autowired
-    Traceroute ttt;
+    ResultTracerouteImplIcmp4j ttt;
 
     @GetMapping(value = "/rest/ping")
-    public PingType getPing(@RequestParam(value = "host") String host, @RequestParam(value = "count", required = false, defaultValue = "4") int count, @RequestParam(value = "packetsize", required = false, defaultValue = "32") int packetsize, @RequestParam(value = "ttl", required = false, defaultValue = "53") int ttl, @RequestParam(value = "timeout", required = false, defaultValue = "53") long timeout) {
+    public ResultPingType getPing(@RequestParam(value = "host") String host, @RequestParam(value = "count", required = false, defaultValue = "4") int count, @RequestParam(value = "packetsize", required = false, defaultValue = "32") int packetsize, @RequestParam(value = "ttl", required = false, defaultValue = "53") int ttl, @RequestParam(value = "timeout", required = false, defaultValue = "53") long timeout) {
         InetAddress hhh = null;
         try {
             hhh = Inet4Address.getByName("localhost");
@@ -37,7 +34,7 @@ public class RestControler {
             e.printStackTrace();
             return null;
         }
-        PingType res = new PingTypeImplIcmp4j();
+        ResultPingType res = new ResultPingTypeImplIcmp4J();
         count = count < 1 ? 1 : count;
         packetsize = packetsize < 1 ? 32 : packetsize;
         ttl = ttl < 1 ? 53 : ttl;
@@ -53,7 +50,7 @@ public class RestControler {
             return null;
         }
         ppp.setIp(host);
-        res = ppp.ping();
+        res = ppp.doit();
         if (!res.isCorrect()) {
             res = null;
         }
@@ -63,13 +60,7 @@ public class RestControler {
     @GetMapping(value = "/rest/pingtostring")
     public String getStringFromPing(@RequestParam(value = "host") String host, @RequestParam(value = "count", required = false, defaultValue = "4") int count, @RequestParam(value = "packetsize", required = false, defaultValue = "32") int packetsize, @RequestParam(value = "ttl", required = false, defaultValue = "53") int ttl, @RequestParam(value = "timeout", required = false, defaultValue = "53") long timeout) throws JsonProcessingException {
         InetAddress hhh = null;
-        try {
-            hhh = Inet4Address.getByName("localhost");
-        } catch (UnknownHostException e) {
-            String jsonString = new ObjectMapper().writeValueAsString("Localhost not found");
-            return jsonString;
-        }
-        PingType res = new PingTypeImplIcmp4j();
+        ResultPingType res = new ResultPingTypeImplIcmp4J();
         count = count < 1 ? 1 : count;
         packetsize = packetsize < 1 ? 32 : packetsize;
         ttl = ttl < 1 ? 53 : ttl;
@@ -85,7 +76,7 @@ public class RestControler {
             return jsonString;
         }
         ppp.setIp(host);
-        res = ppp.ping();
+        res = ppp.doit();
         if (!res.isCorrect()) {
             res = null;
         }
@@ -102,12 +93,8 @@ public class RestControler {
         ttt.setPacketsize(packetsize);
         ttt.setTTL(ttl);
         ttt.setTimeOut(timeout);
-        try {
-            ttt.setIp(host);
-            res = ttt.reportTraceroute(ttt.traceroute());
-        } catch (UnknownHostException e) {
-            res = String.format("Ping request could not find host %s. Please check the name and try again.", host);
-        }
+        ttt.setIp(host);
+        res = ttt.doit().toString();
         return  res;
     }
 
