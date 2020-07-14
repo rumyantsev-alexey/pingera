@@ -10,13 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class ResultPingTypeImplIcmp4J implements ResultPingType {
+public class ResultPingTypeImplIcmp4J extends ResultOfNetworkTools {
 
     private List<IcmpPingResponse> res = new ArrayList<>();
-
-    public ResultPingTypeImplIcmp4J(List<IcmpPingResponse> res) {
-        this.res = res;
-    }
 
     @SneakyThrows
     @Override
@@ -54,20 +50,5 @@ public class ResultPingTypeImplIcmp4J implements ResultPingType {
         result.append(String.format(footer, ip.getHostAddress(), size, size - lost, lost, (lost / size) * 100, min, max, sum / size));
         return result.toString();
     };
-
-    @Override
-    public boolean isCorrect() {
-        boolean result = false;
-        try {
-            result = res.get(0).getSuccessFlag();
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-            result = false;
-        }
-        finally {
-            return result;
-        }
-    }
-
 }
 

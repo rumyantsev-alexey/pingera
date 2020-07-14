@@ -2,15 +2,11 @@ package ru.job4j.pingera.clasez;
 
 
 import lombok.SneakyThrows;
-import org.icmp4j.IcmpPingResponse;
-import org.icmp4j.IcmpPingUtil;
 import org.icmp4j.IcmpTraceRouteRequest;
 import org.icmp4j.IcmpTraceRouteUtil;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Map;
 
 
 /**
@@ -54,7 +50,7 @@ import java.util.Map;
  *     [junit] ]
  */
 @Component
-public class ResultTracerouteImplIcmp4j extends ResultOfNetworkTools<ResultTracerouteType> {
+public class TracerouteImplIcmp4j implements DoIt{
 
     private IcmpTraceRouteRequest ipr = new IcmpTraceRouteRequest();
 
@@ -89,33 +85,37 @@ public class ResultTracerouteImplIcmp4j extends ResultOfNetworkTools<ResultTrace
 
     @SneakyThrows
     @Override
-    public ResultTracerouteType doit() {
+    public ResultOfNetworkTools doit() {
         ResultTracerouteTypeImplIcmp4J res = new ResultTracerouteTypeImplIcmp4J();
         res.setIp(InetAddress.getByName(ipr.getHost()));
+        res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
         return res;
     }
 
     @Override
-    public ResultTracerouteType doit(InetAddress ipa, int... op) {
-        ResultTracerouteType res = new ResultTracerouteTypeImplIcmp4J();
+    public ResultOfNetworkTools doit(InetAddress ipa, int... op) {
+        ResultTracerouteTypeImplIcmp4J res = new ResultTracerouteTypeImplIcmp4J();
         switch (op.length) {
             case 0:
             case 1:
                 this.setIp(ipa);
-                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                res.setIp(ipa);
+                res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
                 break;
             case 2:
                 this.setIp(ipa);
                 this.setCount(op[0]);
                 this.setPacketsize(op[1]);
-                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                res.setIp(ipa);
+                res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
                 break;
             case 3:
                 this.setIp(ipa);
                 this.setCount(op[0]);
                 this.setPacketsize(op[1]);
                 this.setTTL(op[2]);
-                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                res.setIp(ipa);
+                res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
                 break;
             case 4:
                 this.setIp(ipa);
@@ -123,10 +123,10 @@ public class ResultTracerouteImplIcmp4j extends ResultOfNetworkTools<ResultTrace
                 this.setPacketsize(op[1]);
                 this.setTTL(op[2]);
                 this.setTimeOut(op[3]);
-                res = new ResultTracerouteTypeImplIcmp4J(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
+                res.setIp(ipa);
+                res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
                 break;
             default:
- //               res.(new ArrayList<>());
                 break;
         }
         return res;
