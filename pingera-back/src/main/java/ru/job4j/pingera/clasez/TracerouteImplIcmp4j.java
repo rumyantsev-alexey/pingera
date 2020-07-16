@@ -88,6 +88,7 @@ public class TracerouteImplIcmp4j implements DoIt{
     public ResultOfNetworkTools doit() {
         ResultTracerouteTypeImplIcmp4J res = new ResultTracerouteTypeImplIcmp4J();
         res.setIp(InetAddress.getByName(ipr.getHost()));
+        // todo сделать success
         res.setRes(IcmpTraceRouteUtil.executeTraceRoute(ipr).getTtlToResponseMap());
         return res;
     }

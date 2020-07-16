@@ -31,9 +31,6 @@ public class SubTaskUtility {
     @Autowired
     private TasksRepository t;
 
-    @Autowired
-    private JavaMailSender mail;
-
     ScheduledExecutorService localExecutor = Executors.newSingleThreadScheduledExecutor();
 
     public List<SubTask> convert(Task task) {
@@ -100,26 +97,6 @@ public class SubTaskUtility {
 
     @Async
     @Transactional
-    public void sendEmailResultCompleteSubTasks() {
-        List<SubTask> list = st.findAllByWorkAndComplete(true, true);
-        for (SubTask l: list) {
-            l.setWork(false);
-            st.save(l);
-            if (l.getTask().getSellist4() == ToolHandlers.email) {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo("telesyn73@mail.ru");
-                message.setSubject(String.format("Result subtask №%s of task №%s", l.getId(), l.getTask().getId()));
-                String res = l.getTask().toString() + System.lineSeparator();
-                res += l.toString() + System.lineSeparator();
-                message.setText(res);
-                mail.send(message);
-            }
-        }
-    }
-
-
-    @Async
-    @Transactional
     public void runSubTask(List<SubTask> list) {
         ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(localExecutor);
         for (SubTask l : list) {
@@ -130,7 +107,7 @@ public class SubTaskUtility {
                                            boolean Successfully = false;
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
-                                                    chooseTool ct = new chooseTool();
+                                                    SelectTool ct = new SelectTool();
                                                     ResultOfNetworkTools r = ct.getResultWithTools(task);
                                                     l.setResult(r.getResult().getBytes());
                                                     Successfully = r.isSuccess();

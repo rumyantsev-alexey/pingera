@@ -6,7 +6,7 @@ import ru.job4j.pingera.models.Task;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class chooseTool {
+public class SelectTool {
        public ResultOfNetworkTools getResultWithTools(Task task) {
         ResultOfNetworkTools result = new ResultPingTypeImplIcmp4J();
         switch (task.getSellist1()) {

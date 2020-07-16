@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface SubTaskRepository extends CrudRepository<SubTask, Long> {
-    List<SubTask> findAllByWorkAndComplete(boolean at_work, boolean complete);
+    List<SubTask> findAllByCompleteAndWork(boolean complete, boolean work);
     List<SubTask> findAllByComplete(boolean complete);
     List<SubTask> deleteAllByTask(Task task);
     List<SubTask> findAllByTaskAndComplete(Task task, boolean complete);
