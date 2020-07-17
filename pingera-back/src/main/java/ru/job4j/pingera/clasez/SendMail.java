@@ -3,14 +3,8 @@ package ru.job4j.pingera.clasez;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.pingera.models.SubTask;
-import ru.job4j.pingera.models.Task;
-import ru.job4j.pingera.repositories.SubTaskRepository;
-
-import java.util.List;
 
 @Component
 public class SendMail {

@@ -29,7 +29,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     @Autowired
     private SelectToolHeandler sth;
 
-
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         List<SubTask> list = st.findAllByComplete(false);
@@ -55,7 +54,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
                     st.saveAll(list_task);
                 }
             }
-        }, new Date(System.currentTimeMillis() + Constant.DELAY_FOE_MAIL), Constant.PERIOD_FOR_MAIL);
+        }, new Date(System.currentTimeMillis() + Constant.DELAY_FOR_SEND_RESULT), Constant.PERIOD_FOR_SEND_RESULT);
 
     }
 
