@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.pingera.clasez.Constant;
 import ru.job4j.pingera.clasez.SubTaskUtility;
+import ru.job4j.pingera.clasez.ToolHandlers;
 import ru.job4j.pingera.dto.SubTaskDto;
 import ru.job4j.pingera.models.SubTask;
 import ru.job4j.pingera.models.Task;
@@ -48,6 +50,13 @@ public class MainController {
             newtask.setUser(user);
             newtask.setActual(true);
             newtask.setSplit(true);
+            if (newtask.isAccount()) {
+                if (newtask.getSellist4() == ToolHandlers.telegramm) {
+                    newtask.setText4(user.getChatid());
+                } else if(newtask.getSellist4() == ToolHandlers.email) {
+                    newtask.setText4(user.getEmail());
+                }
+            }
             newtask = t.save(newtask);
             st.saveAll(new SubTaskUtility().convert(newtask));
             return new ResponseEntity(HttpStatus.ACCEPTED);

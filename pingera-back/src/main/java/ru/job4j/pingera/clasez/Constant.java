@@ -17,4 +17,7 @@ public class Constant {
     public static final String TELEGRAM_REPORT_WORD = "/report";
     public static final String TELEGRAM_START_WORD = "/start";
     public static final String TELEGRAM_ID_WORD = "/id";
+    public static final String TELEGRAM_HELP_WORD = "/help";
+
+    public static final String SELECT_ACCOUNT_OPT = "acc";
 }

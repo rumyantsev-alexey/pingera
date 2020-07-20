@@ -37,7 +37,14 @@ public class User {
         @Column(name = "email")
         private String email;
 
-        public String toString() {
+       @Getter
+       @Setter
+       @Email
+       @Column(name = "chatid")
+       private String chatid;
+
+
+ public String toString() {
          StringBuilder result = new StringBuilder();
          result.append("user: " + name + " (id = " + id + ") email:" + email);
          return result.toString();

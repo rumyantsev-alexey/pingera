@@ -58,7 +58,7 @@ public class SubTaskUtility {
             default:
                 period = 0;
         }
-        for(int i =1 ; i <= task.getTotal(); i++ ) {
+        for(int i =1 ; i <= task.getTotal(); i++) {
             SubTask st = new SubTask();
             st.setDate1(new Timestamp(task.getDate1().getTime() + period * (i - 1)));
             st.setTask(task);
@@ -104,18 +104,18 @@ public class SubTaskUtility {
                 scheduler.schedule(new Runnable() {
                                         @Override
                                        public void run() {
-                                           boolean Successfully = false;
+                                           boolean successfully = false;
                                            Task task = l.getTask();
                                            if (isCorrectHost(task.getText2())) {
                                                     SelectTool ct = new SelectTool();
                                                     ResultOfNetworkTools r = ct.getResultWithTools(task);
                                                     l.setResult(r.getResult().getBytes());
-                                                    Successfully = r.isSuccess();
+                                                    successfully = r.isSuccess();
                                            } else {
                                                l.setResult("Host not found".getBytes());
                                            }
                                            l.setComplete(true);
-                                           l.setSuccessfully(Successfully);
+                                           l.setSuccessfully(successfully);
                                            l.setWork(true);
                                            st.save(l);
                                        }

@@ -118,6 +118,12 @@ public class Task {
     @Column(name = "split")
     private boolean split;
 
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "account")
+    private boolean account;
+
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("Task: " + name1 + " (id = " + id + ")" + System.lineSeparator());
