@@ -85,7 +85,6 @@ public class MainController {
         return result;
     }
 
-
     @Transactional
     @PostMapping(value = "/adduser")
         public ResponseEntity addUser(@RequestBody User newuser) {
@@ -96,6 +95,13 @@ public class MainController {
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
         }
+    }
+
+    @Transactional
+    @PostMapping(value = "/modifyuser")
+    public ResponseEntity modifyUser(@RequestBody User modifyuser) {
+        u.save(modifyuser);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     @GetMapping(value = "/getallcompletesubtasksfortask/{id}")

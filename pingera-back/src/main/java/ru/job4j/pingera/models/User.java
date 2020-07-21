@@ -39,7 +39,6 @@ public class User {
 
        @Getter
        @Setter
-       @Email
        @Column(name = "chatid")
        private String chatid;
 
