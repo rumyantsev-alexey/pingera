@@ -52,9 +52,9 @@ public class MainController {
             newtask.setSplit(true);
             if (newtask.isAccount()) {
                 if (newtask.getSellist4() == ToolHandlers.telegramm) {
-                    newtask.setText4(user.getChatid());
+                    newtask.setText4(user.getLastchatid());
                 } else if(newtask.getSellist4() == ToolHandlers.email) {
-                    newtask.setText4(user.getEmail());
+                    newtask.setText4(user.getLastemail());
                 }
             }
             newtask = t.save(newtask);

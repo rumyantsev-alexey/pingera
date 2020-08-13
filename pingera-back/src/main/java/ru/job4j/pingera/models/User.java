@@ -35,17 +35,17 @@ public class User {
         @Setter
         @Email
         @Column(name = "email")
-        private String email;
+        private String lastemail;
 
        @Getter
        @Setter
        @Column(name = "chatid")
-       private String chatid;
+       private String lastchatid;
 
 
  public String toString() {
          StringBuilder result = new StringBuilder();
-         result.append("user: " + name + " (id = " + id + ") email:" + email);
+         result.append("user: " + name + " (id = " + id );
          return result.toString();
         }
 }
