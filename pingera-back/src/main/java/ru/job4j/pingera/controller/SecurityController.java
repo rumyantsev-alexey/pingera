@@ -16,8 +16,8 @@ public class SecurityController {
     private PasswordEncoder pe;
 
     @PostMapping("/login")
-    public boolean isValidUser(@RequestBody User usr) {
+    public User isValidUser(@RequestBody User usr) {
         User user = usdb.findByName(usr.getName());
-        return user != null && pe.matches(usr.getPassword(), user.getPassword());
+        return (user != null && pe.matches(usr.getPassword(), user.getPassword())) ? user: null;
     }
 }
