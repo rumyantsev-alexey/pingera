@@ -1,6 +1,5 @@
 package ru.job4j.pingera.clasez;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.job4j.pingera.models.Task;
 
 import java.net.InetAddress;
@@ -16,10 +15,10 @@ public class SelectTool {
                 try {
                     p = ping.doit(InetAddress.getByName(task.getText2()), task.getCnt(), task.getPacketsize(), task.getTtl(), task.getTimeout());
                     result.setResult(p.toString());
+                    result.setSuccess(true);
                 } catch (UnknownHostException e) {
                     result.setResult("Unknown Host");
-                } finally {
-                    result.setSuccess(p.isSuccess());
+                    result.setSuccess(false);
                 }
                 break;
             case traceroute:
@@ -28,10 +27,10 @@ public class SelectTool {
                 try {
                     ptr = tr.doit(InetAddress.getByName(task.getText2()),0, task.getPacketsize(), task.getTtl(), task.getTimeout());
                     result.setResult(ptr.toString());
+                    result.setSuccess(true);
                 } catch (UnknownHostException e) {
                     result.setResult("Unknown Host");
-                } finally {
-                    result.setSuccess(ptr.isSuccess());
+                    result.setSuccess(false);
                 }
                 break;
             default:

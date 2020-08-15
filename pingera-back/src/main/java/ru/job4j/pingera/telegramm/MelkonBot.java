@@ -1,6 +1,5 @@
 package ru.job4j.pingera.telegramm;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.ApiContextInitializer;

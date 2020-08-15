@@ -44,8 +44,6 @@ public class MainController {
     @PostMapping(value = "/posttask")
     public ResponseEntity PostTask(@RequestBody Task newtask, Principal principal) {
         if (newtask.getName1() != null && principal != null) {
-            newtask.setSplit(true);
-            newtask.setActual(true);
             User user = u.findByName(principal.getName());
             newtask.setUser(user);
             newtask.setActual(true);
@@ -56,6 +54,13 @@ public class MainController {
                 } else if(newtask.getSellist4() == ToolHandlers.email) {
                     newtask.setText4(user.getLastemail());
                 }
+            } else {
+                if (newtask.getSellist4() == ToolHandlers.telegramm) {
+                    user.setLastchatid(newtask.getText4());
+                } else if(newtask.getSellist4() == ToolHandlers.email) {
+                    user.setLastemail(newtask.getText4());
+                }
+                u.save(user);
             }
             newtask = t.save(newtask);
             st.saveAll(new SubTaskUtility().convert(newtask));
@@ -95,13 +100,6 @@ public class MainController {
         } else {
             return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
         }
-    }
-
-    @Transactional
-    @PostMapping(value = "/modifyuser")
-    public ResponseEntity modifyUser(@RequestBody User modifyuser) {
-        u.save(modifyuser);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     @GetMapping(value = "/getallcompletesubtasksfortask/{id}")
