@@ -24,7 +24,7 @@ public class ResultTracerouteTypeImplIcmp4J extends ResultOfNetworkTools {
                 + "over a maximum of 30 hops:" + System.lineSeparator() + System.lineSeparator();
         String body = "%s  %s ms     %s ms     %s ms  %s [%s]" + System.lineSeparator();
         String bad_body = "%s  *          *         *        %s" + System.lineSeparator();
-        String footer = "Trace complete.";
+        String footer = System.lineSeparator() + "Trace complete.";
         StringBuilder result = new StringBuilder();
         result.append(String.format(header, ip.getHostName(), ip.getHostAddress()));
         int ii = 0;

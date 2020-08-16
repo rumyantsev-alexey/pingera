@@ -4,6 +4,8 @@ package ru.job4j.pingera.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.job4j.pingera.clasez.*;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 @RestController
 @CrossOrigin("*")
 public class RestControler {
+
+    private static final Logger LOG = LogManager.getLogger(RestControler.class.getName());
+
 
     @Autowired
     PingImplIcmp4j ppp;
@@ -67,12 +70,17 @@ public class RestControler {
         } else {
             jsonString = new ObjectMapper().writeValueAsString("Host not found");
         }
+        LOG.info("Execute ping (rest conttroler)");
+        LOG.info(String.format("Host: %s", host));
+        LOG.info(String.format("Count: %s", count));
+        LOG.info("Result:");
+        LOG.info(res.toString());
         return jsonString;
     }
 
     @GetMapping (value = "/rest/traceroutetostring")
-    public String getTraceroute(@RequestParam(value = "host") String host, @RequestParam(value = "packetsize", required = false, defaultValue = "32") int packetsize, @RequestParam(value = "ttl", required = false, defaultValue = "30") int ttl, @RequestParam(value = "timeout", required = false, defaultValue = "30") long timeout) {
-        String res = "";
+    public String getTraceroute(@RequestParam(value = "host") String host, @RequestParam(value = "packetsize", required = false, defaultValue = "32") int packetsize, @RequestParam(value = "ttl", required = false, defaultValue = "30") int ttl, @RequestParam(value = "timeout", required = false, defaultValue = "30") long timeout) throws JsonProcessingException {
+        String jsonString;
         ResultTracerouteTypeImplIcmp4J r = new ResultTracerouteTypeImplIcmp4J();
         packetsize = packetsize < 1 ? 32 : packetsize;
         ttl = ttl < 1 ? 30 : ttl;
@@ -83,11 +91,17 @@ public class RestControler {
             ttt.setTimeOut(timeout);
             ttt.setIp(host);
             r = (ResultTracerouteTypeImplIcmp4J) ttt.doit();
+            jsonString = new ObjectMapper().writeValueAsString(r.toString());
 
         } else {
             r = null;
+            jsonString = new ObjectMapper().writeValueAsString("Host not found");
         }
-        return  r.toString();
+        LOG.info("Execute traceroute (rest conttroler)");
+        LOG.info(String.format("Host: %s", host));
+        LOG.info("Result:");
+        LOG.info(r.toString());
+        return  jsonString;
     }
 
     private boolean isCorrectHost(String name) {

@@ -13,7 +13,7 @@ public class SelectTool {
 
     public ResultOfNetworkTools getResultWithTools(Task task) {
         ResultOfNetworkTools result = new ResultPingTypeImplIcmp4J();
-           LOG.info(String.format("Task № %s uses %s",task.getId(), task.getSellist1()));
+           LOG.info(String.format("Task № %s uses %s for result ",task.getId(), task.getSellist1()));
            switch (task.getSellist1()) {
             case ping:
                 ResultOfNetworkTools p = new ResultPingTypeImplIcmp4J();

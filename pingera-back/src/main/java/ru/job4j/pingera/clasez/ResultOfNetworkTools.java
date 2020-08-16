@@ -11,5 +11,4 @@ abstract class ResultOfNetworkTools {
     InetAddress adr;
     boolean Success;
     String result;
-
 }

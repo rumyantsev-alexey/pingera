@@ -87,8 +87,6 @@ public class PingImplIcmp4j implements DoIt {
                 res.setRes(new ArrayList<>());
                 break;
         }
-//        res.setSuccess(res.getRes()[0].);
         return res;
     }
-
 }
