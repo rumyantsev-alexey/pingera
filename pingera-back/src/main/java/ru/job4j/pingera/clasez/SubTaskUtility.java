@@ -1,6 +1,8 @@
 package ru.job4j.pingera.clasez;
 
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -8,6 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.job4j.pingera.ApplicationStartup;
 import ru.job4j.pingera.models.SubTask;
 import ru.job4j.pingera.models.Task;
 import ru.job4j.pingera.repositories.SubTaskRepository;
@@ -24,6 +27,9 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @Component
 public class SubTaskUtility {
+
+
+    private static final Logger LOG = LogManager.getLogger(SubTaskUtility.class.getName());
 
     @Autowired
     private SubTaskRepository st;
@@ -122,10 +128,12 @@ public class SubTaskUtility {
                                    },
                         new Date(l.getDate1().getTime()));
                 l.setWork(true);
+                LOG.info(String.format("Set subtask № %s  task № %s for execution in %s", l.getId(), l.getTask().getId(), new Date(l.getDate1().getTime())));
             } else {
-                l.setResult("Dont work this subtask in time".getBytes());
+                l.setResult("Dont work this subtask because the time is up".getBytes());
                 l.setComplete(true);
                 l.setWork(true);
+                LOG.info(String.format("Subtask № %s  task № %s dont run because the time is up", l.getId(), l.getTask().getId()));
             }
         }
         st.saveAll(list);

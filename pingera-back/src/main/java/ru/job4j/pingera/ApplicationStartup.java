@@ -46,6 +46,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
             }
         }, new Date(System.currentTimeMillis() + Constant.DELAY_FOR_WEB), Constant.PERIOD_FOR_WEB);
 
+        LOG.info(String.format("Run subtask executuon system in %s with period %s ms", new Date(System.currentTimeMillis() + Constant.DELAY_FOR_WEB), Constant.PERIOD_FOR_WEB));
+
         taskScheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -59,6 +61,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
                 }
             }
         }, new Date(System.currentTimeMillis() + Constant.DELAY_FOR_SEND_RESULT), Constant.PERIOD_FOR_SEND_RESULT);
+        LOG.info(String.format("Run subtask send message system in %s with period %s ms", new Date(System.currentTimeMillis() + Constant.DELAY_FOR_SEND_RESULT), Constant.PERIOD_FOR_SEND_RESULT));
 
     }
 
