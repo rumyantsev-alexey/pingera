@@ -9,7 +9,7 @@ import ru.job4j.pingera.telegramm.MelkonBot;
 public class SelectToolHeandler {
 
     @Autowired
-    private MelkonBot mb;
+    private SendTelegramm set;
 
     @Autowired
     private SendMail sm;
@@ -20,7 +20,7 @@ public class SelectToolHeandler {
                 sm.sendEmailResultCompleteSubTasksByTask(st);
                 break;
             case telegramm:
-                mb.send(st.getResult().toString());
+                set.sendTelgeramMesAboutCompleteSubTask(st);
                 break;
             default:
                 break;

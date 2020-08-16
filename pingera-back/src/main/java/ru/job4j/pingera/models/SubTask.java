@@ -30,7 +30,6 @@ public class SubTask {
 
     @Getter
     @Setter
-//    @Lob
     private byte[] result;
 
     @Getter
@@ -53,7 +52,7 @@ public class SubTask {
         result.append("Work: " + work + System.lineSeparator());
         result.append("Complete: " + complete + System.lineSeparator());
         result.append("Successfully: " + successfully + System.lineSeparator());
-        result.append("Result:" + System.lineSeparator());
+        result.append("Result:" + System.lineSeparator() + System.lineSeparator());
         result.append( new String(this.result, StandardCharsets.UTF_8) + System.lineSeparator());
         return result.toString();
     }

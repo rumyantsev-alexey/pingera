@@ -45,7 +45,7 @@ public class User {
 
  public String toString() {
          StringBuilder result = new StringBuilder();
-         result.append("user: " + name + " (id = " + id );
+         result.append("user: " + name + " (id = " + id + ")");
          return result.toString();
         }
 }

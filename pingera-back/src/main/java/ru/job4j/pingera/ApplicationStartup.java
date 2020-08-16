@@ -1,5 +1,7 @@
 package ru.job4j.pingera;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Component
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+
+    private static final Logger LOG = LogManager.getLogger(ApplicationStartup.class.getName());
 
     @Autowired
     private SubTaskUtility cst;

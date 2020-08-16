@@ -89,6 +89,9 @@ public class MelkonBot extends TelegramLongPollingBot {
             case Constant.TELEGRAM_REPORT_WORD:
                 msg = "Ok.. Wait report..";
                 break;
+            case Constant.TELEGRAM_HELP_WORD:
+                msg = "Help.. Wait report..";
+                break;
             default:
                 msg = "Don't valid command";
                 break;
